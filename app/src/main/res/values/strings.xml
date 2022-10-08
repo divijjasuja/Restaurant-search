@@ -1,4 +1,7 @@
 <resources>
     <string name="app_name">Restaurant Searcher</string>
     <string name = "chai_point">Chai Point</string>
+    <string name="chai_point_Description">Good Tea with biscuits</string>
+    <integer name = "chai_point_cost">100</integer>
+    <string name = "chai_point_rating">5.0</string>
 </resources>

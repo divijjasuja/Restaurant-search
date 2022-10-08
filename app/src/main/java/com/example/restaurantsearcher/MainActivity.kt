@@ -5,6 +5,8 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
@@ -14,14 +16,17 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clipToBounds
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.restaurantsearcher.Models.Restaurants
 import com.example.restaurantsearcher.R
 import com.example.restaurantsearcher.ui.theme.RestaurantSearcherTheme
+import com.example.restaurantsearcher.data.DataSource
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -62,47 +67,66 @@ fun SearchBar() {
 }
 
 @Composable
-fun restaurantCards(name: String, Description: String, cost: Int, rating: Float) {
-    Box(
+fun RestaurantCards(restaurant: Restaurants,modifier: Modifier = Modifier) {
+    Card(
+        elevation = 10.dp,
+        shape = RoundedCornerShape(10.dp),
         modifier = Modifier
-            .padding(top = 150.dp)
+            .height(190.dp)
+            .padding(start = 5.dp, end = 5.dp)
     ) {
-        Card(
-            elevation = 10.dp,
-            shape = RoundedCornerShape(10.dp),
-            modifier = Modifier
-                .height(190.dp)
-                .padding(start = 5.dp, end = 5.dp)
-        ) {
-            Column() {
-                Image(
-                    painter = painterResource(id = R.drawable.chai_point),
-                    contentDescription = "Restaurant image",
-                    contentScale = ContentScale.Crop,
-                    modifier = Modifier.height(120.dp)
-                )
-                Row(modifier = Modifier.fillMaxWidth().padding(start = 10.dp, end = 25.dp), horizontalArrangement = Arrangement.SpaceBetween) {
-                    Column() {
-                        Text(
-                            text = name,
-                            fontSize = 30.sp,
-                            fontWeight = FontWeight.Bold,
-                            fontFamily = FontFamily.SansSerif
-                        )
-                        Text(
-                            text = Description,
-                            fontSize = 15.sp,
-                            fontFamily = FontFamily.Serif
-                        )
-                    }
-                    Column(modifier = Modifier
+        Column() {
+            Image(
+                painter = painterResource(restaurant.imageResourceId),
+                contentDescription = "Restaurant image",
+                contentScale = ContentScale.Crop,
+                modifier = Modifier.height(120.dp)
+            )
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(start = 10.dp, end = 25.dp),
+                horizontalArrangement = Arrangement.SpaceBetween
+            ) {
+                Column() {
+                    Text(
+                        text = LocalContext.current.getString(restaurant.name),
+                        fontSize = 30.sp,
+                        fontWeight = FontWeight.Bold,
+                        fontFamily = FontFamily.SansSerif
+                    )
+                    Text(
+                        text = LocalContext.current.getString(restaurant.Description),
+                        fontSize = 15.sp,
+                        fontFamily = FontFamily.Serif
+                    )
+                }
+                Column(
+                    modifier = Modifier
                         .fillMaxHeight(),
-                        verticalArrangement = Arrangement.SpaceBetween) {
-                        Text(text = rating.toString(), fontSize = 20.sp, modifier = Modifier.padding(top = 10.dp))
-                        Text(text = cost.toString(), fontSize = 15.sp,modifier = Modifier.padding(bottom = 10.dp))
-                    }
+                    verticalArrangement = Arrangement.SpaceBetween
+                ) {
+                    Text(
+                        text = LocalContext.current.getString(restaurant.rating),
+                        fontSize = 20.sp,
+                        modifier = Modifier.padding(top = 10.dp)
+                    )
+                    Text(
+                        text = "Rs. ${restaurant.cost.toString()}",
+                        fontSize = 15.sp,
+                        modifier = Modifier.padding(bottom = 10.dp)
+                    )
                 }
             }
+        }
+    }
+}
+
+@Composable
+fun RestaurantList(restaurantList: List<Restaurants>,modifier: Modifier = Modifier) {
+    LazyColumn {
+        items(restaurantList) { restaurant ->
+            RestaurantCards(restaurant)
         }
     }
 }
@@ -111,7 +135,7 @@ fun restaurantCards(name: String, Description: String, cost: Int, rating: Float)
 @Composable
 fun DefaultPreview() {
     RestaurantSearcherTheme {
-        SearchBar()
-        restaurantCards(name = "Chai Point", Description = "Best tea", cost = 10, rating = 5.0f)
+//        SearchBar()
+        RestaurantList(restaurantList = DataSource().loadRestaurants())
     }
 }
