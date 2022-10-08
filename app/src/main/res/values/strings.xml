@@ -1,0 +1,4 @@
+<resources>
+    <string name="app_name">Restaurant Searcher</string>
+    <string name = "chai_point">Chai Point</string>
+</resources>
