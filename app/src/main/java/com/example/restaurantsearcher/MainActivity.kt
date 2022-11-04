@@ -38,7 +38,7 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colors.background
                 ) {
-                    SearchBar()
+                    RestaurantList(restaurantList = DataSource().loadRestaurants())
                 }
             }
         }
@@ -112,7 +112,7 @@ fun RestaurantCards(restaurant: Restaurants,modifier: Modifier = Modifier) {
                         modifier = Modifier.padding(top = 10.dp)
                     )
                     Text(
-                        text = "Rs. ${restaurant.cost.toString()}",
+                        text = "Rs. ${restaurant.cost}",
                         fontSize = 15.sp,
                         modifier = Modifier.padding(bottom = 10.dp)
                     )

@@ -7,7 +7,7 @@ import androidx.annotation.StringRes
 data class Restaurants(
     @StringRes val name: Int,
     @StringRes val Description: Int,
-    @IntegerRes val cost: Int,
+    @StringRes val cost: Int,
     @StringRes val rating: Int,
     @DrawableRes val imageResourceId: Int
 )
